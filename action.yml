@@ -1,0 +1,20 @@
+name: Setup S3FS
+description: Sets up and configures rexray S3FS docker plugin
+inputs:
+  s3fs_access_key:
+    description: 'AWS access key'
+  aws_secret_key:
+    description: 'AWS secret key'
+  region:
+    description: 'AWS default region'
+    required: false
+continue-on-error: true
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        if [ ! -z "${{inputs.region}}" ] ; then
+          REGION_OPT='S3FS_REGION=${{inputs.region}}'
+        fi
+        docker plugin install rexray/s3fs S3FS_ACCESSKEY=${{inputs.s3fs_access_key}} S3FS_SECRETKEY=${{inputs.s3fs_access_key}} $REGION_OPT --grant-all-permissions
